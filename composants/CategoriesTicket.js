@@ -36,6 +36,12 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     justifyContent:"space-around",
     alignItems:"center",
+    elevation:4,
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   ticketText: {
     fontSize: 18,
