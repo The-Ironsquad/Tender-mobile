@@ -8,12 +8,12 @@ export default function ListScreen() {
 
   useEffect(()=>{
     setCategories(getAllCategories())
+    
   },[])
 
   return (
     <View>
-    {categories.map(category=><Text>{category}</Text> )}
-
+      <Text>List</Text>
     </View>
   )
 }
