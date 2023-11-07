@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Button } from 'react-native'
 import React from 'react'
 
-export default function ListScreen() {
+export default function ListScreen({navigation}) {
   return (
     <View>
       <Text>ListScreen</Text>
