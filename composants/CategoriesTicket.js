@@ -4,7 +4,7 @@ import React from 'react'
 export default function CategoriesTicket({category}) {
   return (
     <View>
-      <Text>category.name</Text>
+      <Text>{category.name}</Text>
     </View>
   )
 }

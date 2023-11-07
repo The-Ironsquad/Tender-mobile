@@ -1,10 +1,19 @@
 import { StyleSheet, Text, View, Button } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import getAllCategories from '../services/getAllCategories'
 
-export default function ListScreen({navigation}) {
+export default function ListScreen() {
+
+  const [categories, setCategories] = useState(null)
+
+  useEffect(()=>{
+    setCategories(getAllCategories())
+  },[])
+
   return (
     <View>
-      <Text>ListScreen</Text>
+    {categories.map(category=><Text>{category}</Text> )}
+
     </View>
   )
 }
