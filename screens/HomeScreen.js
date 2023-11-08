@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, Image } from "react-native";
+import { StyleSheet, Text, View, Button, Image, useWindowDimensions} from "react-native";
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.rootContainer}>
       <View style={styles.imageContainer}>
-        <SvgLogo width={200} height={200} fill={Colors.accent500} />
+        <SvgLogo style={styles.image} width={200} height={200} />
       </View>
       <View style={styles.ticketsContainer}>
         {categories !== null &&
@@ -76,15 +76,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     flexDirection: "row",
+    justifyContent:"center",
     flexWrap: "wrap",
     maxHeight: "40%",
   },
   imageContainer: {
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
     overflow: "hidden",
     margin: 5,
     maxHeight: 220,
   },
   image: {
+    color:Colors.accent500,
     width: "100%",
     height: "100%",
     resizeMode: "contain",
