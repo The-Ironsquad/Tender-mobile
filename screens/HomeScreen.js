@@ -36,6 +36,7 @@ export default function HomeScreen({navigation}) {
   return (
     <View style={styles.rootContainer}>
     <View style={styles.imageContainer}>
+      <SvgLogo width={48} height={48} fill="#000" />
       <Image style={styles.image} source={require("../assets/images/logo-2.png")}/>
     </View>
     <View style={styles.ticketsContainer}>
