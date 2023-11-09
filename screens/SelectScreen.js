@@ -1,10 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Button} from 'react-native'
 import React from 'react'
 
-export default function SelectScreen() {
+
+export default function SelectScreen({navigation}) {
   return (
     <View>
-      <Text>SelectScreen</Text>
+    {/* photo of the meal */}
+    
+      <Text>Name of the meal</Text>
+      <View>
+        {/* buttons left and right */}
+      </View>
+      <Button title='See Your Selection' onPress={()=>navigation.navigate("LIST")}/>
     </View>
   )
 }

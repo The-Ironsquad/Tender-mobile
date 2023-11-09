@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View, Button, Image, useWindowDimensions} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import CategoriesTicket from "../composants/CategoriesTicket";
 import SvgLogo from "../assets/images/Logo.svg";
 import Colors from "../constants/colors";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -55,7 +63,11 @@ export default function HomeScreen({ navigation }) {
           ))}
       </View>
       <View>
-        <Button title="Find Recipes!" />
+        <Button
+          title="Find Recipes!"
+          color={Colors.primary}
+          onPress={() => navigation.navigate("SWIPE")}
+        />
       </View>
 
       <View style={styles.footer}>
@@ -76,20 +88,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     flexDirection: "row",
-    justifyContent:"center",
+    justifyContent: "center",
     flexWrap: "wrap",
     maxHeight: "40%",
   },
   imageContainer: {
-    flex:1,
-    justifyContent:"center",
-    alignItems:"center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     overflow: "hidden",
     margin: 5,
     maxHeight: 220,
   },
   image: {
-    color:Colors.accent500,
+    color: Colors.accent500,
     width: "100%",
     height: "100%",
     resizeMode: "contain",

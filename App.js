@@ -6,6 +6,7 @@ import HomeScreen from "./screens/HomeScreen";
 import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
 import SelectScreen from "./screens/SelectScreen"
+import CompareSelectionScreen from "./screens/CompareSelectionScreen"
 import { PaperProvider, MD3LightTheme as DefaultTheme } from "react-native-paper";
 
 const Stack = createStackNavigator();
@@ -64,7 +65,10 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="HOME" component={HomeScreen} />
+          <Stack.Screen name="SWIPE" component={SelectScreen} />
           <Stack.Screen name="LIST" component={ListScreen} />
+          <Stack.Screen name="COMPARE" component={CompareSelectionScreen} />
+          <Stack.Screen name="COOK" component={CookScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
