@@ -7,7 +7,8 @@ export default function ListScreen({navigation}) {
 
   return (
     /* shows the button to navigate to SelectScreen when there is nothing here */
-    /* when there is selection, show Flat list with remove button and cook button*/
+    /* when there is selection, show Flat list with swipe to remove button and tap to cook button*/
+
     <View>
    {/*    <FlatList /> */}
     <Text>The list screen</Text>

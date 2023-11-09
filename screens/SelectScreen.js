@@ -9,7 +9,10 @@ export default function SelectScreen({navigation}) {
     
       <Text>Name of the meal</Text>
       <View>
-        {/* buttons left and right */}
+    {/* swipe left and right */}
+    {/* button like and regret and dislike */}
+    {/*  npm i --save react-tinder-card */
+    /*  npm i --save @react-spring/native@9.5.5 */}
       </View>
       <Button title='See Your Selection' onPress={()=>navigation.navigate("LIST")}/>
     </View>

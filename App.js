@@ -65,7 +65,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="HOME" component={HomeScreen} />
-          <Stack.Screen name="SWIPE" component={SelectScreen} />
+          <Stack.Screen name="SOME INSPIRATIONS" component={SelectScreen} />
           <Stack.Screen name="LIST" component={ListScreen} />
           <Stack.Screen name="COMPARE" component={CompareSelectionScreen} />
           <Stack.Screen name="COOK" component={CookScreen} />
