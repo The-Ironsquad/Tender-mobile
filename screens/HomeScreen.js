@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation }) {
       ]);
     } else {
       setSelectedCategories((previousSelection) =>
-        previousSelection.filter((id) => id !== idCategory)
+        previousSelection.filter((item) => item !== category)
       );
     }
   };
