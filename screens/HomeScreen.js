@@ -12,7 +12,6 @@ import { useState, useEffect } from "react";
 import CategoriesTicket from "../composants/CategoriesTicket";
 import SvgLogo from "../assets/images/Logo.svg";
 import Colors from "../constants/colors";
-import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -34,11 +33,11 @@ export default function HomeScreen({ navigation }) {
     fetchCategories();
   }, []);
 
-  const handleCategorySelection = (idCategory, isChecked) => {
+  const handleCategorySelection = (category, isChecked) => {
     if (isChecked) {
       setSelectedCategories((previousSelection) => [
         ...previousSelection,
-        idCategory,
+        category,
       ]);
     } else {
       setSelectedCategories((previousSelection) =>
@@ -66,10 +65,9 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Find Recipes!"
           color={Colors.primary}
-          onPress={() => navigation.navigate("SWIPE")}
+          onPress={() => navigation.navigate("SWIPE",{selectedCategories: selectedCategories})}
         />
       </View>
-
       <View style={styles.footer}>
         <Text>
           Powered by <Text>The Meal DB</Text>

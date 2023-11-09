@@ -9,13 +9,13 @@ export default function CategoriesTicket({ category, onCategorySelected }) {
 
   const handleCategorySelection = ()=>{
     setIsChecked(!isChecked)
-    onCategorySelected(category.idCategory, !isChecked)
+    onCategorySelected(category.strCategory, !isChecked)
   }
 
   return (
     <View style={styles.ticket}>
         <Checkbox
-          value={category.idCategory}
+          value={category.strCategory}
           status={isChecked? "checked" : "indeterminate"}
           onPress={handleCategorySelection}
           />
