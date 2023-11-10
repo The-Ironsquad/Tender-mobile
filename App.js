@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
 import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
-import SelectScreen from "./screens/SelectScreen";
+import SelectScreen from "./screens/SelectScreenCopy";
 import CompareSelectionScreen from "./screens/CompareSelectionScreen";
 import {
   PaperProvider,
@@ -64,8 +64,6 @@ const theme = {
 };
 
 export default function App() {
-
-
 
   return (
     <PaperProvider theme={theme}>

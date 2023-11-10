@@ -11,6 +11,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TinderCard from "react-tinder-card";
 import shuffle from "../utils/shuffle";
+import uniqueArray from "../utils/uniqueArray"
 
 export default function SelectScreen({ navigation, route }) {
   const selectedCategories = route.params.selectedCategories;
@@ -18,6 +19,8 @@ export default function SelectScreen({ navigation, route }) {
   const [shownMealIds, setShownMealIds] = useState([]);
   const [availableMeals, setAvailableMeals] = useState([]);
   const [lastDirection, setLastDirection] = useState();
+  const [likedMeals, setLikedMeals] = useState([])
+  const [dislikedMeals, setDislikedMeals] = useState([])
 
   const fetchByCategory = async () => {
     try {
@@ -33,7 +36,7 @@ export default function SelectScreen({ navigation, route }) {
             ]);
           });
       }
-      setAvailableMeals((previousArray) => shuffle(previousArray));
+      setAvailableMeals((previousArray) => shuffle(uniqueArray(previousArray)));
     } catch (error) {
       console.log("error in fetchByCategory:", error);
     }
@@ -45,11 +48,17 @@ export default function SelectScreen({ navigation, route }) {
 
   const swiped = (direction, nameToDelete) => {
     console.log("removing: " + nameToDelete);
+    if(direction === "left"){
+      setLikedMeals((previousArray)=> [...previousArray, currentMeal])
+    }else if (direction ==="right"){
+      setDislikedMeals((previousArray)=>[...previousArray, currentMeal])
+    }
+    setShownMealIds((previousArray)=>[...previousArray, currentMeal])
     setLastDirection(direction);
   };
 
   const outOfFrame = (name) => {
-    console.log(name + " left the screen!");
+    console.log("liked meals:", likedMeals, "disliked meals:", dislikedMeals);
   };
 
   // the TinderCard solution is not ideal because it loads all elements on page. 
