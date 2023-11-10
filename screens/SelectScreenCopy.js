@@ -19,8 +19,9 @@ export default function SelectScreen({ navigation, route }) {
   const [shownMealIds, setShownMealIds] = useState([]);
   const [availableMeals, setAvailableMeals] = useState([]);
   const [lastDirection, setLastDirection] = useState();
-  const [likedMeals, setLikedMeals] = useState([])
-  const [dislikedMeals, setDislikedMeals] = useState([])
+  const shownMeals = []
+  const likedMeals = []
+  const dislikedMeals = []
 
   const fetchByCategory = async () => {
     try {
@@ -46,20 +47,22 @@ export default function SelectScreen({ navigation, route }) {
     fetchByCategory();
   }, []);
 
-  const swiped = (direction, nameToDelete) => {
-    console.log("removing: " + nameToDelete);
+  const swiped = (direction, mealToDelete) => {
+    console.log("removing: " + mealToDelete.strMeal);
     if(direction === "left"){
-      setLikedMeals((previousArray)=> [...previousArray, currentMeal])
+      likedMeals.push(mealToDelete)
     }else if (direction ==="right"){
-      setDislikedMeals((previousArray)=>[...previousArray, currentMeal])
+      dislikedMeals.push(mealToDelete)
     }
-    setShownMealIds((previousArray)=>[...previousArray, currentMeal])
+    shownMeals.push(mealToDelete)
     setLastDirection(direction);
   };
 
-  const outOfFrame = (name) => {
-    console.log("liked meals:", likedMeals, "disliked meals:", dislikedMeals);
-  };
+/*   const outOfFrame = (mealToDelete) => {
+    return undefined
+    console.log("liked meals:", likedMeals[0]);
+    console.log("disliked meals:", dislikedMeals[0]);
+  }; */
 
   // the TinderCard solution is not ideal because it loads all elements on page. 
   // there will be performance issues.
@@ -70,8 +73,8 @@ export default function SelectScreen({ navigation, route }) {
           availableMeals.map((meal) => (
             <TinderCard
               key={meal.idMeal}
-              onSwipe={(dir) => swiped(dir, meal.strMeal)}
-              onCardLeftScreen={() => outOfFrame(meal.strMeal)}
+              onSwipe={(dir) => swiped(dir, meal)}
+              //onCardLeftScreen={() => outOfFrame(meal)}
             >
               <View style={styles.card}>
                 <ImageBackground
@@ -84,11 +87,14 @@ export default function SelectScreen({ navigation, route }) {
             </TinderCard>
           ))}
       </View>
-      {lastDirection ? (
-        <Text style={styles.infoText}>You swiped {lastDirection}</Text>
+      <View>
+        {lastDirection ? (
+        <Text style={styles.infoText}>{lastDirection==="right"? "Great choice!":"Maybe another time"} </Text>
       ) : (
         <Text style={styles.infoText} />
       )}
+      </View>
+      
       <Button
         title="See Your Selection"
         onPress={() => navigation.navigate("LIST")}
