@@ -3,25 +3,23 @@ import {
   Text,
   View,
   Button,
-  FlatList,
-  Image,
   ImageBackground,
+  useWindowDimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TinderCard from "react-tinder-card";
 import shuffle from "../utils/shuffle";
-import uniqueArray from "../utils/uniqueArray"
+import uniqueArray from "../utils/uniqueArray";
 
 export default function SelectScreen({ navigation, route }) {
   const selectedCategories = route.params.selectedCategories;
-  const [currentMeal, setCurrentMeal] = useState({});
-  const [shownMealIds, setShownMealIds] = useState([]);
   const [availableMeals, setAvailableMeals] = useState([]);
   const [lastDirection, setLastDirection] = useState();
-  const shownMeals = []
-  const likedMeals = []
-  const dislikedMeals = []
+  const shownMeals = [];
+  const likedMeals = [];
+  const dislikedMeals = [];
+  const { height, width } = useWindowDimensions();
 
   const fetchByCategory = async () => {
     try {
@@ -49,65 +47,97 @@ export default function SelectScreen({ navigation, route }) {
 
   const swiped = (direction, mealToDelete) => {
     console.log("removing: " + mealToDelete.strMeal);
-    if(direction === "left"){
-      likedMeals.push(mealToDelete)
-    }else if (direction ==="right"){
-      dislikedMeals.push(mealToDelete)
+    if (direction === "left") {
+      likedMeals.push(mealToDelete);
+    } else if (direction === "right") {
+      dislikedMeals.push(mealToDelete);
     }
-    shownMeals.push(mealToDelete)
+    shownMeals.push(mealToDelete);
     setLastDirection(direction);
   };
 
-/*   const outOfFrame = (mealToDelete) => {
+  /*   const outOfFrame = (mealToDelete) => {
     return undefined
     console.log("liked meals:", likedMeals[0]);
     console.log("disliked meals:", dislikedMeals[0]);
   }; */
 
-  // the TinderCard solution is not ideal because it loads all elements on page. 
+  // the TinderCard solution is not ideal because it loads all elements on page.
   // there will be performance issues.
   return (
-    <View style={styles.container}>
-      <View style={styles.cardContainer}>
-        {availableMeals &&
-          availableMeals.map((meal) => (
-            <TinderCard
-              key={meal.idMeal}
-              onSwipe={(dir) => swiped(dir, meal)}
-              //onCardLeftScreen={() => outOfFrame(meal)}
-            >
-              <View style={styles.card}>
-                <ImageBackground
-                  style={styles.cardImage}
-                  source={{ uri: meal.strMealThumb }}
+    <View style={styles.rootContainer}>
+      <View style={[styles.container, { height: 0.7 * height }]}>
+        <View
+          style={[
+            styles.cardContainer,
+            {
+              width: 0.9 * width,
+              maxWidth: width,
+              maxHeight: 0.6 * height,
+            },
+          ]}
+        >
+          {availableMeals &&
+            availableMeals.map((meal) => (
+              <TinderCard
+                key={meal.idMeal}
+                onSwipe={(dir) => swiped(dir, meal)}
+                //onCardLeftScreen={() => outOfFrame(meal)}
+              >
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      height: 0.6 * height,
+                    },
+                  ]}
                 >
-                  <Text style={styles.cardTitle}>{meal.strMeal}</Text>
-                </ImageBackground>
-              </View>
-            </TinderCard>
-          ))}
+                  <ImageBackground
+                    style={styles.cardImage}
+                    source={{ uri: meal.strMealThumb }}
+                  >
+                    <Text style={styles.cardTitle}>{meal.strMeal}</Text>
+                  </ImageBackground>
+                </View>
+              </TinderCard>
+            ))}
+        </View>
+        <View>
+          {lastDirection ? (
+            <Text style={styles.infoText}>
+              {lastDirection === "right"
+                ? "Great choice!"
+                : "Maybe another time"}{" "}
+            </Text>
+          ) : (
+            <Text style={styles.infoText} />
+          )}
+        </View>
       </View>
-      <View>
-        {lastDirection ? (
-        <Text style={styles.infoText}>{lastDirection==="right"? "Great choice!":"Maybe another time"} </Text>
-      ) : (
-        <Text style={styles.infoText} />
-      )}
-      </View>
-      
-      <Button
+      <View style={[styles.listButton, {height:0.15 * height}]}>
+        <Button
         title="See Your Selection"
-        onPress={() => navigation.navigate("LIST")}
+        onPress={() => navigation.navigate("LIST" , {likedMeals:likedMeals})}
       />
+      
+      </View>
+      <View style={{height:0.05 * height}}>
+      <Text>Swipe right to like a recipe!</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
+  rootContainer: {
+    flex: 1,
+    justifyContent: "space-around",
     alignItems: "center",
-    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    marginBottom: 20,
+    alignItems: "center",
     width: "100%",
   },
   header: {
@@ -116,17 +146,16 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   cardContainer: {
+    marginTop: 30,
     width: "90%",
     maxWidth: 260,
     height: 300,
-    padding:10
+    padding: 10,
   },
   card: {
     position: "absolute",
     backgroundColor: "#fff",
     width: "100%",
-    maxWidth: "90%",
-    height: 300,
     backgroundColor: "white",
     shadowColor: "#b3b3b3",
     shadowOpacity: 0.6,
@@ -134,7 +163,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     borderRadius: 4,
     resizeMode: "cover",
-    padding:10
+    padding: 10,
   },
   cardImage: {
     width: "100%",
@@ -153,5 +182,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     display: "flex",
     zIndex: -100,
+    margin: 20,
+  },
+  likeButtonsContainer: {
+    flex: 1,
+    width: "60%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  likeButton: {},
+  listButton: {
+    paddingTop:30
   },
 });
