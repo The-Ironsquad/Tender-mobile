@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
 import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
-import SelectScreen from "./screens/SelectScreenCopy";
+import SelectScreen from "./screens/SelectScreen";
 import CompareSelectionScreen from "./screens/CompareSelectionScreen";
 import {
   PaperProvider,
@@ -96,7 +96,7 @@ export default function App() {
             name="LIST"
             component={ListScreen}
             options={{
-              title: "Your candidates",
+              title: "Your likes",
             }}
           />
           <Stack.Screen
