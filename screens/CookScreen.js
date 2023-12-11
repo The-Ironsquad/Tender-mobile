@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function CookScreen() {
+export default function CookScreen({navigation, route}) {
+  const meal = route.params.meal
   return (
     <View>
-      <Text>CookScreen</Text>
+      <Text>{meal.strMeal}</Text>
     </View>
   )
 }
