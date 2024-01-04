@@ -5,11 +5,17 @@ import Colors from "../constants/colors";
 
 export default function ReceipeListElement({ meal, handleRemove}) {
     const navigation = useNavigation()
+    const truncateTitle = (title, maxLength) => {
+      if (title.length > maxLength) {
+        return title.substring(0, maxLength - 3) + '...';
+      }
+      return title;
+    };
   return (
     <View style={styles.card}>
       <Image style={styles.image} source={{ uri: meal.strMealThumb }} />
       <View>
-        <Text>{meal.strMeal}</Text>
+        <Text>{truncateTitle(meal.strMeal,25)}</Text>
       </View>
       <View>
       <Button title="Cook This" onPress={() => navigation.navigate("COOK", {mealId:meal.idMeal})} />

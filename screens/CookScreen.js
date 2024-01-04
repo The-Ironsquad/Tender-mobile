@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     paddingHorizontal:30,
     flex:1,
     flexDirection:"row",
-    alignItems:"center"
+    alignItems:"center",
+    marginBottom:20,
   },
   instructions: {
     marginTop:15,
