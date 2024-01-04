@@ -9,7 +9,7 @@ import {
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import CategoriesTicket from "../composants/CategoriesTicket";
+import CategoriesTicket from "../components/CategoriesTicket";
 import SvgLogo from "../assets/images/Logo.svg";
 import Colors from "../constants/colors";
 

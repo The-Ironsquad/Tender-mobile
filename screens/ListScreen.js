@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList,Text, View, Button, InteractionManager } from 'react-native'
 import React, { useState,useEffect } from 'react'
-import ReceipeListElement from '../composants/ReceipeListElement'
+import ReceipeListElement from '../components/ReceipeListElement'
 
 
 export default function ListScreen({navigation, route}) {
@@ -23,7 +23,7 @@ export default function ListScreen({navigation, route}) {
       renderItem={({item})=> <ReceipeListElement key={item.idMeal} meal={item} handleRemove={handleRemove}/> }
     />
     {/* <Button title="Cook" onPress={()=>navigation.navigate("COOK")}/> */}
-    <Button title="Refin your selection" onPress={()=>navigation.navigate("COMPARE")}/>
+    <Button title="Refine your selection" onPress={()=>navigation.navigate("COMPARE")}/>
     </View>
   )
 }

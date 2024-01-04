@@ -62,7 +62,7 @@ export default function SelectScreen({ navigation, route }) {
     setLastDirection(direction);
   };
   const handleSelections = () => {
-    console.log("navigating to selections, here are liked meals:", likedMeals);
+    // console.log("navigating to selections, here are liked meals:", likedMeals);
     navigation.navigate("LIST", { likedMeals: likedMeals });
   };
   /*   const outOfFrame = (mealToDelete) => {

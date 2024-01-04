@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: Colors.outline,
     flexDirection: "row",
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.headerBackground,
     justifyContent: "space-between",
   },
   image: {
