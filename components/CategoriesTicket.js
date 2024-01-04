@@ -1,21 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { Checkbox } from "react-native-paper";
-import Colors from "../constants/colors"
+import Colors from "../constants/colors";
+
 
 export default function CategoriesTicket({ category, onCategorySelected }) {
-
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCategorySelection = ()=>{
     setIsChecked(!isChecked)
-    onCategorySelected(category.idCategory, !isChecked)
+    onCategorySelected(category.strCategory, !isChecked)
   }
 
   return (
     <View style={styles.ticket}>
         <Checkbox
-          value={category.idCategory}
+          value={category.strCategory}
           status={isChecked? "checked" : "indeterminate"}
           onPress={handleCategorySelection}
           />
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   ticketText: {
-    fontSize: 18,
+    fontSize: 15,
     color: Colors.accent500,
     fontWeight:"bold",
     justifyContent:"center"
-  }
+  },
 });
