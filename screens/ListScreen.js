@@ -24,7 +24,7 @@ export default function ListScreen({navigation, route}) {
       renderItem={({item})=> <ReceipeListElement key={item.idMeal} meal={item} handleRemove={handleRemove}/> }
     />
     {/* <Button title="Cook" onPress={()=>navigation.navigate("COOK")}/> */}
-    <Button title="Refine your selection" onPress={()=>navigation.navigate("COMPARE")}/>
+    <Button title="Refine your selection" onPress={()=>navigation.navigate("COMPARE", {meals:selection})}/>
     </View>
   )
 }
