@@ -12,7 +12,7 @@ export default function ReceipeListElement({ meal, handleRemove}) {
         <Text>{meal.strMeal}</Text>
       </View>
       <View>
-      <Button title="Cook This" onPress={() => navigation.navigate("COOK", {meal:meal})} />
+      <Button title="Cook This" onPress={() => navigation.navigate("COOK", {mealId:meal.idMeal})} />
         <Button title="Remove" onPress={() => handleRemove(meal.idMeal)} />
       </View>
     </View>
