@@ -1,10 +1,24 @@
 import { StyleSheet, FlatList,Text, View, Button, InteractionManager } from 'react-native'
-import React, { useState,useEffect } from 'react'
+import React, { useState,useEffect, useLayoutEffect } from 'react'
 import ReceipeListElement from '../components/ReceipeListElement'
+import IconButton from '../components/IconButton'
 
 
 export default function ListScreen({navigation, route}) {
   const [selection,setSelection] = useState([])
+
+  function headerButtonPressHandler() {
+    navigation.navigate("HOME")
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => 
+        <View style={{marginRight: 15}}>
+          <IconButton onPress={headerButtonPressHandler} icon="home" color="white" />
+        </View>
+    });
+  }, [navigation, headerButtonPressHandler]);
 
   const handleRemove = (mealIdToRemove)=>{
     console.log("idMeal to remove:", mealIdToRemove)
