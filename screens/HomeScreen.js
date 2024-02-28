@@ -19,7 +19,8 @@ export default function HomeScreen({ navigation }) {
   const [categories, setCategories] = useState(null);
 
   function headerButtonPressHandler() {
-    console.log('Pressed!');
+    console.log("Go to selected list page")
+    // navigation.navigate("LIST")
   }
 
   useLayoutEffect(() => {
@@ -80,7 +81,7 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Find Recipes!"
           color={Colors.primary}
-          onPress={() => navigation.navigate("SWIPE",{selectedCategories: selectedCategories})}
+          onPress={() => navigation.navigate("LIST")}
         />
       </View>
       <View style={styles.footer}>
