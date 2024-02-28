@@ -2,7 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./screens/HomeScreen";
 import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
@@ -14,7 +13,6 @@ import {
 } from "react-native-paper";
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
 // react native paper theme, applied globally
 // to change the theme value, use this link:
 // https://callstack.github.io/react-native-paper/docs/guides/theming/#theme-properties
@@ -66,25 +64,11 @@ const theme = {
 };
 
 export default function App() {
+
   return (
     <PaperProvider theme={theme}>
       <StatusBar style="black" />
       <NavigationContainer>
-        <Drawer.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: theme.colors.headerBackground,
-            },
-            headerTintColor: "white",
-            contentStyle: { backgroundColor: theme.colors.background },
-          }}
-        >
-          <Drawer.Screen name="HOME" component={HomeScreen}/>
-          <Drawer.Screen name="SWIPE" component={SelectScreen}/>
-          <Drawer.Screen name="LIST" component={ListScreen}/>
-          <Drawer.Screen name="COMPARE" component={CompareSelectionScreen}/>
-        </Drawer.Navigator>
-
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
