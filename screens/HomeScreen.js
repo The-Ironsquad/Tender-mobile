@@ -8,15 +8,31 @@ import {
 } from "react-native";
 import React from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import CategoriesTicket from "../components/CategoriesTicket";
 import SvgLogo from "../assets/images/Logo.svg";
 import Colors from "../constants/colors";
+import IconButton from "../components/IconButton";
 
 export default function HomeScreen({ navigation }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState(null);
 
+  function headerButtonPressHandler() {
+    console.log("Go to selected list page")
+    // navigation.navigate("LIST")
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => 
+        <View style={{marginRight: 15}}>
+          <IconButton onPress={headerButtonPressHandler} icon="shoppingcart" color="white" />
+        </View>
+    });
+  }, [navigation, headerButtonPressHandler]);
+
+  
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
@@ -65,7 +81,7 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Find Recipes!"
           color={Colors.primary}
-          onPress={() => navigation.navigate("SWIPE",{selectedCategories: selectedCategories})}
+          onPress={() => navigation.navigate("LIST")}
         />
       </View>
       <View style={styles.footer}>
