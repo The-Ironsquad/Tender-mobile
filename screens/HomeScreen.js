@@ -81,7 +81,7 @@ export default function HomeScreen({ navigation }) {
         <Button
           title="Find Recipes!"
           color={Colors.primary}
-          onPress={() => navigation.navigate("LIST")}
+          onPress={() => navigation.navigate("SWIPE", {selectedCategories: selectedCategories})}
         />
       </View>
       <View style={styles.footer}>
