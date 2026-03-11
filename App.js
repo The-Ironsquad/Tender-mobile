@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View, Pressable } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -7,6 +9,7 @@ import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
 import SelectScreen from "./screens/SelectScreen";
 import CompareSelectionScreen from "./screens/CompareSelectionScreen";
+import FavoritesScreen from "./screens/FavoritesScreen";
 import {
   PaperProvider,
   MD3LightTheme as DefaultTheme,
@@ -66,17 +69,26 @@ const theme = {
 export default function App() {
 
   return (
-    <PaperProvider theme={theme}>
-      <StatusBar style="black" />
-      <NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PaperProvider theme={theme}>
+        <StatusBar style="black" />
+        <NavigationContainer>
         <Stack.Navigator
-          screenOptions={{
+          screenOptions={({ navigation, route }) => ({
             headerStyle: {
               backgroundColor: theme.colors.headerBackground,
             },
             headerTintColor: "white",
             contentStyle: { backgroundColor: theme.colors.background },
-          }}
+            headerRight: route.name === "FAVORITES" ? undefined : () => (
+              <Pressable
+                onPress={() => navigation.navigate("FAVORITES")}
+                style={({ pressed }) => ({ marginRight: 15, opacity: pressed ? 0.5 : 1 })}
+              >
+                <AntDesign name="user" size={24} color="white" />
+              </Pressable>
+            ),
+          })}
         >
           <Stack.Screen
             name="HOME"
@@ -103,7 +115,7 @@ export default function App() {
             name="COMPARE"
             component={CompareSelectionScreen}
             options={{
-              title: "Home",
+              title: "Pick your favourite",
             }}
           />
           <Stack.Screen
@@ -113,9 +125,17 @@ export default function App() {
               title: "Time to cook!",
             }}
           />
+          <Stack.Screen
+            name="FAVORITES"
+            component={FavoritesScreen}
+            options={{
+              title: "My Favorites",
+            }}
+          />
         </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }
 

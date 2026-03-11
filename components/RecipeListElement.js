@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import Colors from "../constants/colors";
 
-export default function ReceipeListElement({ meal, handleRemove }) {
+export default function RecipeListElement({ meal, handleRemove }) {
   const navigation = useNavigation();
 
   const truncateTitle = (title, maxLength) => {
