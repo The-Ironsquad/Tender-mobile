@@ -23,7 +23,12 @@ export default function HomeScreen({ navigation }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <View style={{ marginRight: 15 }}>
+        <View style={{ flexDirection: "row", gap: 16, marginRight: 15 }}>
+          <IconButton
+            onPress={() => navigation.navigate("FAVORITES")}
+            icon="user"
+            color="white"
+          />
           <IconButton
             onPress={() => navigation.navigate("LIST", { likedMeals: [] })}
             icon="shoppingcart"

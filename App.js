@@ -8,6 +8,7 @@ import CookScreen from "./screens/CookScreen";
 import ListScreen from "./screens/ListScreen";
 import SelectScreen from "./screens/SelectScreen";
 import CompareSelectionScreen from "./screens/CompareSelectionScreen";
+import FavoritesScreen from "./screens/FavoritesScreen";
 import {
   PaperProvider,
   MD3LightTheme as DefaultTheme,
@@ -113,6 +114,13 @@ export default function App() {
             component={CookScreen}
             options={{
               title: "Time to cook!",
+            }}
+          />
+          <Stack.Screen
+            name="FAVORITES"
+            component={FavoritesScreen}
+            options={{
+              title: "My Favorites",
             }}
           />
         </Stack.Navigator>
