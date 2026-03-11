@@ -3,8 +3,8 @@ import {
   Text,
   View,
   Button,
-  Image,
-  useWindowDimensions,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import React from "react";
 import axios from "axios";
@@ -17,49 +17,61 @@ import IconButton from "../components/IconButton";
 export default function HomeScreen({ navigation }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categories, setCategories] = useState(null);
-
-  function headerButtonPressHandler() {
-    console.log("Go to selected list page")
-    // navigation.navigate("LIST")
-  }
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => 
-        <View style={{marginRight: 15}}>
-          <IconButton onPress={headerButtonPressHandler} icon="shoppingcart" color="white" />
+      headerRight: () => (
+        <View style={{ flexDirection: "row", gap: 16, marginRight: 15 }}>
+          <IconButton
+            onPress={() => navigation.navigate("FAVORITES")}
+            icon="user"
+            color="white"
+          />
+          <IconButton
+            onPress={() => navigation.navigate("LIST", { likedMeals: [] })}
+            icon="shoppingcart"
+            color="white"
+          />
         </View>
+      ),
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation]);
 
-  
   const fetchCategories = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await axios.get(
         "https://www.themealdb.com/api/json/v1/1/categories.php"
       );
       setCategories(response.data.categories);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+    } catch (err) {
+      setError("Failed to load categories. Please check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // fetch all categories on loading. no need to refresh later
     fetchCategories();
   }, []);
 
   const handleCategorySelection = (category, isChecked) => {
     if (isChecked) {
-      setSelectedCategories((previousSelection) => [
-        ...previousSelection,
-        category,
-      ]);
+      setSelectedCategories((prev) => [...prev, category]);
     } else {
-      setSelectedCategories((previousSelection) =>
-        previousSelection.filter((item) => item !== category)
-      );
+      setSelectedCategories((prev) => prev.filter((item) => item !== category));
     }
+  };
+
+  const handleFindRecipes = () => {
+    if (selectedCategories.length === 0) {
+      Alert.alert("No categories selected", "Please select at least one category to find recipes.");
+      return;
+    }
+    navigation.navigate("SWIPE", { selectedCategories });
   };
 
   return (
@@ -67,8 +79,18 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.imageContainer}>
         <SvgLogo style={styles.image} width={200} height={200} />
       </View>
+
       <View style={styles.ticketsContainer}>
-        {categories !== null &&
+        {loading && <ActivityIndicator size="large" color={Colors.primary} />}
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+            <Button title="Retry" color={Colors.primary} onPress={fetchCategories} />
+          </View>
+        )}
+        {!loading &&
+          !error &&
+          categories &&
           categories.map((category) => (
             <CategoriesTicket
               key={category.idCategory}
@@ -77,13 +99,15 @@ export default function HomeScreen({ navigation }) {
             />
           ))}
       </View>
+
       <View>
         <Button
           title="Find Recipes!"
           color={Colors.primary}
-          onPress={() => navigation.navigate("SWIPE", {selectedCategories: selectedCategories})}
+          onPress={handleFindRecipes}
         />
       </View>
+
       <View style={styles.footer}>
         <Text>
           Powered by <Text>The Meal DB</Text>
@@ -119,6 +143,16 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "contain",
+  },
+  errorContainer: {
+    alignItems: "center",
+    padding: 16,
+    gap: 8,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginBottom: 8,
   },
   footer: {
     justifyContent: "center",
