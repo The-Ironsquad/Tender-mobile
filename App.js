@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
@@ -66,9 +67,10 @@ const theme = {
 export default function App() {
 
   return (
-    <PaperProvider theme={theme}>
-      <StatusBar style="black" />
-      <NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PaperProvider theme={theme}>
+        <StatusBar style="black" />
+        <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
@@ -103,7 +105,7 @@ export default function App() {
             name="COMPARE"
             component={CompareSelectionScreen}
             options={{
-              title: "Home",
+              title: "Pick your favourite",
             }}
           />
           <Stack.Screen
@@ -114,8 +116,9 @@ export default function App() {
             }}
           />
         </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+        </NavigationContainer>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }
 

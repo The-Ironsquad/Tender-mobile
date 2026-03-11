@@ -4,6 +4,7 @@ import {
   View,
   Button,
   ImageBackground,
+  ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -16,30 +17,28 @@ import uniqueArray from "../utils/uniqueArray";
 export default function SelectScreen({ navigation, route }) {
   const selectedCategories = route.params.selectedCategories;
   const [availableMeals, setAvailableMeals] = useState([]);
-  const [lastDirection, setLastDirection] = useState();
-  const [shownMeals, setShownMeals] = useState([]);
   const [likedMeals, setLikedMeals] = useState([]);
-  const [dislikedMeals, setDislikedMeals] = useState([]);
+  const [lastDirection, setLastDirection] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { height, width } = useWindowDimensions();
 
-  // using axios to fetch api by url and run the function on load
   const fetchByCategory = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      let meals = [];
       for (const category of selectedCategories) {
-        await axios
-          .get(
-            `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
-          )
-          .then((response) => {
-            setAvailableMeals((previousArray) => [
-              ...previousArray,
-              ...response.data.meals,
-            ]);
-          });
+        const response = await axios.get(
+          `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+        );
+        meals = [...meals, ...response.data.meals];
       }
-      setAvailableMeals((previousArray) => shuffle(uniqueArray(previousArray)));
-    } catch (error) {
-      console.log("error in fetchByCategory:", error);
+      setAvailableMeals(shuffle(uniqueArray(meals)));
+    } catch (err) {
+      setError("Failed to load recipes. Please check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,32 +46,31 @@ export default function SelectScreen({ navigation, route }) {
     fetchByCategory();
   }, []);
 
-  const swiped = (direction, mealToDelete) => {
-    // console.log("removing: " + mealToDelete.strMeal);
+  const swiped = (direction, meal) => {
     if (direction === "right") {
-      setLikedMeals((prevLikedMeals) => [...prevLikedMeals, mealToDelete]);
-      
-    } else if (direction === "left") {
-      setDislikedMeals((prevDislikedMeals) => [
-        ...prevDislikedMeals,
-        mealToDelete,
-      ]);
+      setLikedMeals((prev) => [...prev, meal]);
     }
-    setShownMeals((prevShownMeals) => [...prevShownMeals, mealToDelete]);
     setLastDirection(direction);
   };
-  const handleSelections = () => {
-    // console.log("navigating to selections, here are liked meals:", likedMeals);
-    navigation.navigate("LIST", { likedMeals: likedMeals });
-  };
-  /*   const outOfFrame = (mealToDelete) => {
-    return undefined
-    console.log("liked meals:", likedMeals[0]);
-    console.log("disliked meals:", dislikedMeals[0]);
-  }; */
 
-  // the TinderCard solution is not ideal because it loads all elements on page.
-  // there will be performance issue if the selection is very big
+  if (loading) {
+    return (
+      <View style={styles.centeredContainer}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+        <Text style={styles.loadingText}>Finding recipes for you...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Button title="Retry" color={Colors.primary} onPress={fetchByCategory} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.rootContainer}>
       <View style={[styles.container, { height: 0.7 * height }]}>
@@ -86,37 +84,26 @@ export default function SelectScreen({ navigation, route }) {
             },
           ]}
         >
-          {availableMeals &&
-            availableMeals.map((meal) => (
-              <TinderCard
-                key={meal.idMeal}
-                onSwipe={(dir) => swiped(dir, meal)}
-                //onCardLeftScreen={() => outOfFrame(meal)}
-              >
-                <View
-                  style={[
-                    styles.card,
-                    {
-                      height: 0.6 * height,
-                    },
-                  ]}
+          {availableMeals.map((meal) => (
+            <TinderCard
+              key={meal.idMeal}
+              onSwipe={(dir) => swiped(dir, meal)}
+            >
+              <View style={[styles.card, { height: 0.6 * height }]}>
+                <ImageBackground
+                  style={styles.cardImage}
+                  source={{ uri: meal.strMealThumb }}
                 >
-                  <ImageBackground
-                    style={styles.cardImage}
-                    source={{ uri: meal.strMealThumb }}
-                  >
-                    <Text style={styles.cardTitle}>{meal.strMeal}</Text>
-                  </ImageBackground>
-                </View>
-              </TinderCard>
-            ))}
+                  <Text style={styles.cardTitle}>{meal.strMeal}</Text>
+                </ImageBackground>
+              </View>
+            </TinderCard>
+          ))}
         </View>
         <View>
           {lastDirection ? (
             <Text style={styles.infoText}>
-              {lastDirection === "right"
-                ? "Great choice!"
-                : "Maybe another time"}{" "}
+              {lastDirection === "right" ? "Great choice!" : "Maybe another time"}
             </Text>
           ) : (
             <Text style={styles.infoText} />
@@ -124,7 +111,11 @@ export default function SelectScreen({ navigation, route }) {
         </View>
       </View>
       <View style={[styles.listButton, { height: 0.15 * height }]}>
-        <Button title="See Your Selection" onPress={() => handleSelections()} />
+        <Button
+          title="See Your Selection"
+          color={Colors.primary}
+          onPress={() => navigation.navigate("LIST", { likedMeals })}
+        />
       </View>
       <View style={{ height: 0.05 * height }}>
         <Text>Swipe right to like a recipe!</Text>
@@ -139,16 +130,29 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 16,
+    padding: 32,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: Colors.secondary,
+    marginTop: 8,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    fontSize: 15,
+    marginBottom: 8,
+  },
   container: {
     flex: 1,
     marginBottom: 20,
     alignItems: "center",
     width: "100%",
-  },
-  header: {
-    color: "#000",
-    fontSize: 30,
-    marginBottom: 30,
   },
   cardContainer: {
     marginTop: 30,
@@ -159,15 +163,13 @@ const styles = StyleSheet.create({
   },
   card: {
     position: "absolute",
-    backgroundColor: "#fff",
-    width: "100%",
     backgroundColor: "white",
+    width: "100%",
     shadowColor: "#b3b3b3",
     shadowOpacity: 0.6,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     borderRadius: 4,
-    resizeMode: "cover",
     padding: 10,
   },
   cardImage: {
@@ -193,14 +195,6 @@ const styles = StyleSheet.create({
     zIndex: -100,
     margin: 20,
   },
-  likeButtonsContainer: {
-    flex: 1,
-    width: "60%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  likeButton: {},
   listButton: {
     paddingTop: 30,
   },

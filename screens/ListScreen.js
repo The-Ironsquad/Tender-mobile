@@ -1,46 +1,87 @@
-import { StyleSheet, FlatList,Text, View, Button, InteractionManager } from 'react-native'
-import React, { useState,useEffect, useLayoutEffect } from 'react'
-import ReceipeListElement from '../components/ReceipeListElement'
-import IconButton from '../components/IconButton'
+import { StyleSheet, FlatList, Text, View, Button } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import RecipeListElement from '../components/RecipeListElement';
+import IconButton from '../components/IconButton';
+import Colors from '../constants/colors';
 
-
-export default function ListScreen({navigation, route}) {
-  const [selection,setSelection] = useState([])
-
-  function headerButtonPressHandler() {
-    navigation.navigate("HOME")
-  }
+export default function ListScreen({ navigation, route }) {
+  const [selection, setSelection] = useState([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => 
-        <View style={{marginRight: 15}}>
-          <IconButton onPress={headerButtonPressHandler} icon="home" color="white" />
+      headerRight: () => (
+        <View style={{ marginRight: 15 }}>
+          <IconButton onPress={() => navigation.navigate('HOME')} icon="home" color="white" />
         </View>
+      ),
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation]);
 
-  const handleRemove = (mealIdToRemove)=>{
-    console.log("idMeal to remove:", mealIdToRemove)
-    setSelection(previousSelection => previousSelection.filter(meal=> meal.idMeal !== mealIdToRemove))
+  useEffect(() => {
+    setSelection(route.params?.likedMeals ?? []);
+  }, []);
+
+  const handleRemove = (mealIdToRemove) => {
+    setSelection((prev) => prev.filter((meal) => meal.idMeal !== mealIdToRemove));
+  };
+
+  if (selection.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>Nothing here yet</Text>
+        <Text style={styles.emptySubtitle}>Swipe right on recipes you like and they'll show up here.</Text>
+        <Button
+          title="Go find recipes"
+          color={Colors.primary}
+          onPress={() => navigation.navigate('HOME')}
+        />
+      </View>
+    );
   }
- 
-  useEffect(()=>{
-    setSelection(route.params.likedMeals)
-  },[])
-  return (
-    /* shows the button to navigate to SelectScreen when there is nothing here */
-    /* when there is selection, show Flat list with swipe to remove button and tap to cook button*/
 
-    <View>
-    <FlatList
-      data={selection}
-      renderItem={({item})=> <ReceipeListElement key={item.idMeal} meal={item} handleRemove={handleRemove}/> }
-    />
-    {/* <Button title="Cook" onPress={()=>navigation.navigate("COOK")}/> */}
-    <Button title="Refine your selection" onPress={()=>navigation.navigate("COMPARE", {meals:selection})}/>
+  return (
+    <View style={styles.rootContainer}>
+      <FlatList
+        data={selection}
+        keyExtractor={(item) => item.idMeal}
+        renderItem={({ item }) => (
+          <RecipeListElement meal={item} handleRemove={handleRemove} />
+        )}
+      />
+      <View style={styles.refineButton}>
+        <Button
+          title="Refine your selection"
+          color={Colors.primary}
+          onPress={() => navigation.navigate('COMPARE', { meals: selection })}
+        />
+      </View>
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 32,
+    gap: 12,
+  },
+  emptyTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: Colors.secondary,
+  },
+  emptySubtitle: {
+    fontSize: 15,
+    textAlign: 'center',
+    color: '#666',
+    marginBottom: 16,
+  },
+  refineButton: {
+    padding: 16,
+  },
+});

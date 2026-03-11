@@ -1,42 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
+import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import Colors from '../constants/colors';
 
-export default function RecipeBattleScreen({ navigation, route }) {
-  const { meals } = route.params; // Get the list of meals passed as a parameter
-  const [remainingMeals, setRemainingMeals] = useState([...meals]); // Remaining meals for the battle
-  const [pair, setPair] = useState([]); // Current pair of recipes for comparison
+export default function CompareSelectionScreen({ navigation, route }) {
+  const { meals } = route.params;
+  const [remainingMeals, setRemainingMeals] = useState([...meals]);
+  const [pair, setPair] = useState([]);
 
   useEffect(() => {
-    // Initialize with the first two meals from the list
-    setPair([remainingMeals[0], remainingMeals[1]]);
+    if (remainingMeals.length >= 2) {
+      setPair([remainingMeals[0], remainingMeals[1]]);
+    } else if (remainingMeals.length === 1) {
+      navigation.navigate('COOK', { mealId: remainingMeals[0].idMeal });
+    }
   }, [remainingMeals]);
 
-
-  // this function is not working until the end. try to fixe the issue of 1 left in the list. 
   const handleChooseWinner = (winner) => {
-    const loser = pair.find(recipe => recipe.idMeal !== winner.idMeal);
-    const updatedRemainingMeals = remainingMeals.filter(recipe => recipe.idMeal !== loser.idMeal);
-    setRemainingMeals(updatedRemainingMeals);
-  
-    if (updatedRemainingMeals.length > 1) {
-      // Choose a new pair for the next battle
-      setPair([updatedRemainingMeals[0], updatedRemainingMeals[1]]);
-    } else if (updatedRemainingMeals.length === 1) {
-      // Only one recipe remains, declare it as the winner
-      Alert.alert('Winner', `The ultimate winner is ${updatedRemainingMeals[0].strMeal}`);
-      navigation.navigate("COOK", { mealId: updatedRemainingMeals[0].idMeal });
-    } else {
-      // Handle the scenario where no recipes remain
-      Alert.alert('No Recipes Left', 'All recipes have been compared.');
-    }
+    const loser = pair.find((recipe) => recipe.idMeal !== winner.idMeal);
+    const updated = remainingMeals.filter((recipe) => recipe.idMeal !== loser.idMeal);
+    setRemainingMeals(updated);
   };
+
+  if (remainingMeals.length < 2) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
-      {pair.map(recipe => (
-        <TouchableOpacity key={recipe.idMeal} style={styles.recipeContainer} onPress={() => handleChooseWinner(recipe)}>
+      <Text style={styles.prompt}>Which one would you rather cook?</Text>
+      {pair.map((recipe) => (
+        <TouchableOpacity
+          key={recipe.idMeal}
+          style={styles.recipeContainer}
+          onPress={() => handleChooseWinner(recipe)}
+        >
           <Image source={{ uri: recipe.strMealThumb }} style={styles.image} />
-          <Text>{recipe.strMeal}</Text>
+          <Text style={styles.name}>{recipe.strMeal}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -48,15 +47,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 16,
+  },
+  prompt: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    color: Colors.secondary,
   },
   recipeContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 24,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   image: {
-    minWidth: 250,
-    minHeight: 250,
-    marginBottom: 10,
-    borderRadius: 10,
+    width: 280,
+    height: 200,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    padding: 10,
+    textAlign: 'center',
   },
 });
