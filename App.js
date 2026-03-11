@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Pressable } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -73,13 +74,21 @@ export default function App() {
         <StatusBar style="black" />
         <NavigationContainer>
         <Stack.Navigator
-          screenOptions={{
+          screenOptions={({ navigation, route }) => ({
             headerStyle: {
               backgroundColor: theme.colors.headerBackground,
             },
             headerTintColor: "white",
             contentStyle: { backgroundColor: theme.colors.background },
-          }}
+            headerRight: route.name === "FAVORITES" ? undefined : () => (
+              <Pressable
+                onPress={() => navigation.navigate("FAVORITES")}
+                style={({ pressed }) => ({ marginRight: 15, opacity: pressed ? 0.5 : 1 })}
+              >
+                <AntDesign name="user" size={24} color="white" />
+              </Pressable>
+            ),
+          })}
         >
           <Stack.Screen
             name="HOME"
